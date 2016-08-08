@@ -12,6 +12,7 @@ module Ahoy
         source_root File.expand_path("../templates", __FILE__)
 
         class_option :database, type: :string, aliases: "-d"
+        class_option :migration_path, type: :string, aliases: "-m"
 
         # Implement the required interface for Rails::Generators::Migration.
         def self.next_migration_number(dirname) #:nodoc:
@@ -27,7 +28,8 @@ module Ahoy
           unless options["database"].in?([nil, "postgresql", "postgresql-jsonb"])
             raise Thor::Error, "Unknown database option"
           end
-          migration_template "active_record_visits_migration.rb", "db/migrate/create_visits.rb"
+          migration_path = options["migration_path"] || "db/migrate"
+          migration_template "active_record_visits_migration.rb", "#{migration_path}/create_visits.rb"
         end
 
         def generate_model
